@@ -79,20 +79,102 @@ get_header();
 		<?php
 	}
 
-	if ( have_posts() ) {
+if ( have_posts() ) {
+
+	/*
+	 * Trang chủ:
+	 * Hiển thị bài viết theo kiểu danh sách ngày + tiêu đề + mô tả.
+	 */
+	if ( is_home() || is_front_page() ) {
+
+		?>
+
+		<div class="homepage-news-list section-inner">
+
+	<?php while ( have_posts() ) : the_post(); ?>
+
+		<article class="homepage-news-item">
+
+			<div class="homepage-news-date">
+
+				<span class="homepage-news-day">
+					<?php echo esc_html( get_the_date( 'd' ) ); ?>
+				</span>
+
+				<span class="homepage-news-month">
+					THÁNG <?php echo esc_html( get_the_date( 'm' ) ); ?>
+				</span>
+
+			</div>
+
+			<div class="homepage-news-content">
+
+				<h2 class="homepage-news-title">
+
+					<a href="<?php the_permalink(); ?>">
+						<?php the_title(); ?>
+					</a>
+
+				</h2>
+
+				<div class="homepage-news-excerpt">
+
+					<?php
+					if ( has_excerpt() ) {
+
+						the_excerpt();
+
+					} else {
+
+						echo esc_html(
+							wp_trim_words(
+								get_the_content(),
+								30,
+								'...'
+							)
+						);
+
+					}
+					?>
+
+				</div>
+
+			</div>
+
+		</article>
+
+	<?php endwhile; ?>
+
+</div>
+
+		<?php
+
+	} else {
+
+		/*
+		 * Các trang khác:
+		 * Giữ nguyên giao diện mặc định của Twenty Twenty.
+		 */
 
 		$i = 0;
 
 		while ( have_posts() ) {
 			++$i;
+
 			if ( $i > 1 ) {
 				echo '<hr class="post-separator styled-separator is-style-wide section-inner" aria-hidden="true" />';
 			}
+
 			the_post();
 
-			get_template_part( 'template-parts/content', get_post_type() );
-
+			get_template_part(
+				'template-parts/content',
+				get_post_type()
+			);
 		}
+	}
+
+} elseif ( is_search() ) {
 	} elseif ( is_search() ) {
 		?>
 
