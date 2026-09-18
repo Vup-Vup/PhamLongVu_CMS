@@ -1,6 +1,6 @@
 # Sensitive configuration
 wp-config.php
-
+AGENTS.md
 # General logs
 *.log
 
